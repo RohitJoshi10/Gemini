@@ -2,11 +2,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors"); // Add this line
+const cors = require("cors");
 const app = express();
 const db = require("./db");
 
-app.use(cors()); // Add this line
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
@@ -26,7 +26,10 @@ const generate = async (prompt) => {
 
 app.get("/api/ask", async (req, res) => {
   try {
-    const data = req.query.question; // Change to req.query
+    const data = req.query.question;
+    if (!data) {
+      return res.status(400).send({ error: "Question is required." });
+    }
     const result = await generate(data);
     res.send({
       result: result,
